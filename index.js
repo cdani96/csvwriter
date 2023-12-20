@@ -4,20 +4,20 @@ import { createObjectCsvWriter } from "csv-writer";
 import gradient from "gradient-string";
 import chalkAnimation from "chalk-animation";
 
-prompt.start()
+prompt.start();
 prompt.message = "";
 
 class Person {
   constructor(name = "", number = "", email = "") {
-    (this.name = name), (this.number = number), (this.email = email)
+    (this.name = name), (this.number = number), (this.email = email);
   }
   saveToCsv() {
     try {
       const { name, number, email } = this;
       csvWriter.writeRecords([{ name, number, email }]);
-      console.log(chalk.greenBright(`${name} Saved!`))
+      console.log(chalk.greenBright(`${name} Saved!`));
     } catch (err) {
-      console.error(chalk.redBright(err))
+      console.error(chalk.redBright(err));
     }
   }
 }
@@ -28,11 +28,17 @@ const csvWriter = createObjectCsvWriter({
   header: [
     { id: "name", title: "NAME" },
     { id: "number", title: "NUMBER" },
-    { id: "email", title: "EMAIL" }
-  ]
+    { id: "email", title: "EMAIL" },
+  ],
 });
 
 const startApp = async () => {
+  chalkAnimation.pulse("Welcom to my app!");
+
+  console.log(
+    gradient.rainbow("This app will help you to create and save contacts", 2),
+  );
+
   const person = new Person();
   const responses = await prompt.get([
     {
@@ -53,22 +59,10 @@ const startApp = async () => {
   const { again } = await prompt.get([
     {
       name: "again",
-      description: chalk.yellowBright("Continue? [y to continue] ")
-    }
+      description: chalk.yellowBright("Continue? [y to continue] "),
+    },
   ]);
-  if (again === "y") await startApp()
+  if (again === "y") await startApp();
 };
-
-process.on("SIGINT", () => {
-  console.log(chalk.magenta("\nThanks for using the app!"));
-  csvWriter.close().then(() => {
-    process.exit(0)
-  })
-});
-
-
-chalkAnimation.pulse("Welcome to my contact saver app!!");
-
-console.log(gradient.rainbow("This app will help you to create and save contacts.", 2))
 
 startApp();
